@@ -1,0 +1,44 @@
+﻿@page "/counter"
+@rendermode InteractiveServer
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+<p><strong>Backend says:</strong> @backendMessage</p>
+
+<button class="btn btn-primary" @onclick="CallBackend">
+    Ping Backend
+</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}
+
+@code {
+    private string backendMessage = "not called yet";
+
+    private async Task CallBackend()
+    {
+        try
+        {
+            var http = new HttpClient();
+            http.BaseAddress = new Uri("http://localhost:5066");
+
+            backendMessage = await http.GetStringAsync("/ping");
+        }
+        catch (Exception ex)
+        {
+            backendMessage = $"Error: {ex.Message}";
+        }
+    }
+}
