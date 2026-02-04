@@ -1,0 +1,32 @@
+﻿@page "/cds-steps"
+@using CdsFrontend.Services
+@using static CdsFrontend.Services.BackendApiService
+@inject BackendApiService Api
+
+<h3>CDS Workflow Steps</h3>
+
+@if (steps == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var step in steps)
+        {
+            <li class="list-group-item">
+                <strong>@step.Id. @step.Title</strong><br />
+                <span>@step.Description</span>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<CdsStep>? steps;
+
+    protected override async Task OnInitializedAsync()
+    {
+        steps = await Api.GetStepsAsync();
+    }
+}
